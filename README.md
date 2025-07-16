@@ -41,6 +41,11 @@ pip install django djangorestframework Pillow requests psycopg2-binary
 
 
 ```bash
+pip freeze > requirements.txt
+```
+
+
+```bash
 python3 manage.py collectstatic # is used in Django to gather all your static files (CSS, JS, images, etc.) from your apps into a single directory so they can be served efficiently in production (usually by Nginx or a CDN).
 ```
 
