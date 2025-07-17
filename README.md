@@ -126,10 +126,118 @@ It will generate an ip copy ip and paste it on the terminal.
 
 ### **Deploy the Application on Docker** 
 
+**create a docker file**
+```bash
+nano dockerfile
+```
+
+
+```bash
+# Use official Python image
+FROM python:3.11-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set work directory
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+# Copy project files
+COPY . /app/
+
+# Collect static files (optional, for production)
+# RUN python manage.py collectstatic --noinput
+
+# Expose port 8000 for Django
+EXPOSE 8000
+
+# Run migrations and then start Django server
+CMD ["/bin/sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+```
+
 
 Deploying on docker is shown on [Train-food-delivery](https://github.com/didin8080/Train-food-delivery.git) 
 
 All the documents are there in the Github repository.
 
 
+### **Deploy the Application on kubernetes**
 
+
+```bash
+nano deployment.yaml
+```
+
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: train-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: train-app
+  template:
+    metadata:
+      labels:
+        app: train-app
+    spec:
+      containers:
+      - name: django
+        image: didin8080/train-food-delivery:latest
+        ports:
+        - containerPort: 8000
+```
+
+
+```bash
+nano service.yaml
+```
+
+
+```bash
+apiVersion: v1
+kind: Service
+metadata:
+  name: train-service
+spec:
+  type: NodePort
+  selector:
+    app: train-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+      nodePort: 30777
+```
+
+### Deploy it on ArgoCD 
+
+Install helm
+
+
+Configure ArgoCD
+ 
+ Configuration is on the repository [Train-food-delivery](https://github.com/didin8080/Train-food-delivery.git) 
+
+
+At last the output should be like this 
+
+
+`<node-ip:30777>`
+
+`30777` port number that we have mentioned on servive.yaml file 
+
+
+
+<div align="center">
+<img src="/home/devops/test-train/img/argocd.png" alt="Logo" height="500%" width="100%">
+<p align="center"> homepage </p>

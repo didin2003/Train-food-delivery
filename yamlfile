@@ -1,0 +1,47 @@
+vi deployment.yaml
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: train-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: train-app
+  template:
+    metadata:
+      labels:
+        app: train-app
+    spec:
+      containers:
+      - name: django
+        image: yourdockerhub/train-food-delivery:latest
+        ports:
+        - containerPort: 8000
+
+
+nano service.yaml
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: train-service
+spec:
+  type: NodePort
+  selector:
+    app: train-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+      nodePort: 30777
+      
+      
+      
+
+
+
+
