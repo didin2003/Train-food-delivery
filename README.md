@@ -239,5 +239,5 @@ At last the output should be like this
 
 
 <div align="center">
-<img src="/home/devops/test-train/img/argocd.png" alt="Logo" height="500%" width="100%">
+<img src="img/argocd.png" alt="Logo" height="500%" width="100%">
 <p align="center"> homepage </p>
